@@ -69,17 +69,17 @@ export const verifyOtp = (email, otp) => {
 export const requestPasswordResetOtp = (email) => {
   return request({
     service: SERVICE_URLS.AUTH,
-    url: "/auth/password/forgot",
+    url: "/account/forgot-password",
     method: "POST",
     data: { email },
   });
 };
 
-export const resetPasswordWithOtp = ({ email, otp, newPassword }) => {
+export const resetPasswordWithOtp = ({ otp, newPassword }) => {
   return request({
     service: SERVICE_URLS.AUTH,
-    url: "/auth/password/reset",
+    url: "/account/reset-password",
     method: "POST",
-    data: { email, otp, newPassword },
+    data: { otp, newPassword },
   });
 };

@@ -2,9 +2,8 @@ import PropTypes from "prop-types";
 import { useAuth } from "../../../hooks/useAuth";
 const ProfileCard = ({ profile, onEdit }) => {
   const { auth } = useAuth();
-  const user = auth.user;
-
-  console.log("hey i am user from profile card", user);
+  const user = auth?.user;
+  const email = user?.email || profile?.email;
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm max-w-3xl mx-auto overflow-hidden">
       {/* Top Header */}
@@ -38,7 +37,7 @@ const ProfileCard = ({ profile, onEdit }) => {
         <div>
           <SectionTitle title="Contact Information" />
           <div className="grid sm:grid-cols-2 gap-4 mt-4">
-            <InfoItem label="Email" value={user.email} />
+            <InfoItem label="Email" value={email} />
             <InfoItem label="Phone" value={profile.phone} />
           </div>
         </div>
@@ -115,7 +114,7 @@ InfoItem.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-SectionTitle.prototype = {
+SectionTitle.propTypes = {
   title: PropTypes.string,
 };
 

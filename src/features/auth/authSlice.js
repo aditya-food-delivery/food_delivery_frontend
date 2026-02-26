@@ -157,8 +157,8 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(verifyOtp.fulfilled, (state) => {
-        state.status = "idle";
-        state.isAuthenticated = true;
+        // Keep protected routes blocked until loadCurrentUser resolves.
+        state.status = "loading";
       })
       .addCase(verifyOtp.rejected, (state, action) => {
         state.status = "error";

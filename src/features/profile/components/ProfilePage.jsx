@@ -27,7 +27,7 @@ const ProfilePage = () => {
   const userId = auth?.user?.id;
   const profile = useSelector(selectProfile);
 
-  console.log("Hii i am auth from profile page", profile);
+  // console.log("Hii i am auth from profile page", profile);
   const isLoading = useSelector(selectIsProfileLoading);
   const addresses = useSelector(selectAddresses);
   const isAddressSaving = useSelector((state) => state.profile.loading);
@@ -127,5 +127,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
-

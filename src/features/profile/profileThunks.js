@@ -69,7 +69,9 @@ export const addAddress = createAsyncThunk(
   "address/addAddress",
   async ({ profileId, input }, { rejectWithValue }) => {
     try {
+      // console.log("the input is", input);
       const response = await addAddressApi(profileId, input);
+
       return response.data.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
