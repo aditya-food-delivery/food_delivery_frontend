@@ -36,6 +36,16 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    const next = new URLSearchParams(searchParams);
+    next.set("tab", tab);
+    if (tab !== "address") {
+      next.delete("openAddAddress");
+    }
+    setSearchParams(next, { replace: true });
+  };
+
   useEffect(() => {
     if (userId && !profile) dispatch(fetchUserProfile(userId));
   }, [dispatch, userId, profile]);
@@ -48,8 +58,8 @@ const ProfilePage = () => {
     const tab = searchParams.get("tab");
     const openAddAddress = searchParams.get("openAddAddress");
 
-    if (tab === "address") {
-      setActiveTab("address");
+    if (tab === "address" || tab === "orders" || tab === "basic") {
+      setActiveTab(tab);
     }
 
     if (openAddAddress === "true") {
@@ -64,7 +74,7 @@ const ProfilePage = () => {
   };
 
   const openAddAddressModal = () => {
-    setActiveTab("address");
+    handleTabChange("address");
     setIsAddAddressOpen(true);
   };
 
@@ -96,7 +106,7 @@ const ProfilePage = () => {
       <ProfileHeader profile={profile} />
 
       <div className="max-w-7xl mx-auto px-4 py-6 flex gap-6 lg:flex-row flex-col">
-        <ProfileSidebar active={activeTab} onChange={setActiveTab} />
+        <ProfileSidebar active={activeTab} onChange={handleTabChange} />
 
         <ProfileContent
           active={activeTab}

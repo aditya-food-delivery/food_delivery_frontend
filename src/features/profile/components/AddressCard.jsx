@@ -1,72 +1,118 @@
 import PropTypes from "prop-types";
 
+const formatAddressLine = (address) =>
+  [address.line1, address.line2, address.city, address.state]
+    .filter(Boolean)
+    .join(", ");
+
+const getAddressTone = (type) => {
+  switch ((type || "").toLowerCase()) {
+    case "work":
+      return "bg-amber-50 text-amber-700 border-amber-200";
+    case "other":
+      return "bg-slate-50 text-slate-700 border-slate-200";
+    default:
+      return "bg-emerald-50 text-emerald-700 border-emerald-200";
+  }
+};
+
 const AddressCard = ({ addresses, onAddAddress }) => {
-  const addressList = addresses?.getAddressesByProfileId ?? [];
+  const addressList = Array.isArray(addresses) ? addresses : [];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">Addresses</h3>
+    <section className="flex-1 rounded-2xl bg-white p-6 shadow-sm">
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Saved Addresses</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Manage delivery locations for faster checkout.
+          </p>
+        </div>
+
         <button
           type="button"
           onClick={onAddAddress}
-          className="text-sm px-3 py-1.5 rounded-lg border border-gray-300 hover:bg-gray-50"
+          className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
         >
-          + Add Address
+          Add Address
         </button>
       </div>
 
       {addressList.length === 0 ? (
-        <p className="text-gray-500 text-sm">No addresses added yet.</p>
+        <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 py-12 text-center">
+          <p className="text-lg font-semibold text-gray-800">
+            No addresses saved yet
+          </p>
+          <p className="mt-2 text-sm text-gray-500">
+            Add your home or work address to speed up delivery.
+          </p>
+        </div>
       ) : (
-        addressList.map((address) => (
-          <div
-            key={address.id}
-            className={`border rounded-lg p-4 mb-4
-              ${address.defaultFlag ? "border-blue-500 bg-blue-50" : ""}`}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="font-medium">{address.type || "Address"}</span>
-              {address.defaultFlag && (
-                <span className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded">
-                  DEFAULT
-                </span>
-              )}
-            </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {addressList.map((address) => (
+            <article
+              key={address.id}
+              className={`rounded-2xl border p-5 shadow-sm transition hover:shadow-md ${
+                address.defaultFlag
+                  ? "border-orange-200 bg-orange-50/60"
+                  : "border-gray-200 bg-white"
+              }`}
+            >
+              <div className="mb-4 flex items-start justify-between gap-3">
+                <div>
+                  <span
+                    className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${getAddressTone(address.type)}`}
+                  >
+                    {address.type || "Home"}
+                  </span>
+                  {address.defaultFlag ? (
+                    <span className="ml-2 inline-flex rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
+                      Default
+                    </span>
+                  ) : null}
+                </div>
 
-            <p className="text-sm text-gray-700">
-              {address.line1}, {address.city}, {address.state}
-            </p>
-            <p className="text-sm text-gray-500">
-              {address.country} - {address.zipCode}
-            </p>
-          </div>
-        ))
+                <span className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                  {address.country || "India"}
+                </span>
+              </div>
+
+              <p className="text-base font-semibold text-gray-900">
+                {address.city || "Saved address"}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-600">
+                {formatAddressLine(address)}
+              </p>
+              <p className="mt-3 text-sm text-gray-500">
+                ZIP Code: {address.zipCode || "Not provided"}
+              </p>
+            </article>
+          ))}
+        </div>
       )}
-    </div>
+    </section>
   );
 };
 
-/* 🔐 Props Validation */
 AddressCard.propTypes = {
-  addresses: PropTypes.shape({
-    getAddressesByProfileId: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        type: PropTypes.string,
-        line1: PropTypes.string,
-        city: PropTypes.string,
-        state: PropTypes.string,
-        country: PropTypes.string,
-        zipCode: PropTypes.string,
-        defaultFlag: PropTypes.bool,
-      }),
-    ),
-  }).isRequired,
+  addresses: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      type: PropTypes.string,
+      line1: PropTypes.string,
+      line2: PropTypes.string,
+      city: PropTypes.string,
+      state: PropTypes.string,
+      country: PropTypes.string,
+      zipCode: PropTypes.string,
+      defaultFlag: PropTypes.bool,
+    }),
+  ),
   onAddAddress: PropTypes.func,
 };
 
 AddressCard.defaultProps = {
+  addresses: [],
   onAddAddress: () => {},
 };
 

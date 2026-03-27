@@ -6,8 +6,9 @@ export const selectProfileError = (state) => state.profile.error;
 export const selectIsProfileLoading = (state) =>
   state.profile.status === "loading";
 
-export const selectAddresses = (state) => state.profile.addresses;
+export const selectAddresses = (state) =>
+  state.profile.addresses?.getAddressesByProfileId || [];
 
 /* Optional helpers */
 export const selectDefaultAddress = (state) =>
-  state.profile.addresses.find((a) => a.defaultFlag);
+  selectAddresses(state).find((a) => a.defaultFlag);

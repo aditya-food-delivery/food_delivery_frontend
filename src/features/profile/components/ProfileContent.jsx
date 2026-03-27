@@ -1,14 +1,22 @@
 // import BasicInfoSection from "./BasicInfoSection";
 import AddressCard from "./AddressCard";
+import OrdersSection from "./OrdersSection";
 import ProfileCard from "./ProfileCard";
 import PropTypes from "prop-types";
-const ProfileContent = ({ active, profile, addresses, onEdit, onAddAddress }) => {
+const ProfileContent = ({
+  active,
+  profile,
+  addresses,
+  onEdit,
+  onAddAddress,
+}) => {
   return (
     <main className="content">
       {active === "basic" && <ProfileCard profile={profile} onEdit={onEdit} />}
       {active === "address" && (
         <AddressCard addresses={addresses} onAddAddress={onAddAddress} />
       )}
+      {active === "orders" && <OrdersSection userId={profile?.userId} />}
     </main>
   );
 };
