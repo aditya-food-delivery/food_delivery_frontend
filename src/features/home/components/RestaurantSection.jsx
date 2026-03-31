@@ -1,38 +1,63 @@
-import RestaurantCard from "./RestaurantCard";
 import PropTypes from "prop-types";
-import { useParams } from "react-router-dom";
-const RestaurantSection = ({ restaurants }) => {
-  const { city } = useParams();
-  const selectedCity = city || "Delhi";
-  console.log(restaurants);
-  return (
-    <div className="pb-10">
-      <h2 className="text-xl font-semibold mb-4">
-        Best Food in {selectedCity}
-      </h2>
+import RestaurantCard from "./RestaurantCard";
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+const RestaurantSection = ({ city, restaurants }) => {
+  if (!restaurants.length) {
+    return (
+      <section className="rounded-[2rem] border border-orange-100 bg-white px-6 py-12 text-center shadow-[0_20px_60px_-40px_rgba(234,88,12,0.45)]">
+        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-orange-500">
+          Search Results
+        </p>
+        <h2 className="mt-3 font-serif text-3xl text-slate-900">
+          No restaurants found in {city}
+        </h2>
+        <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-500">
+          Try another city from the URL or seed a few restaurants in the search service for this location.
+        </p>
+      </section>
+    );
+  }
+
+  return (
+    <section className="pb-10">
+      <div className="flex flex-col gap-2 pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-orange-500">
+            Delivery picks
+          </p>
+          <h2 className="mt-2 font-serif text-3xl text-slate-900 sm:text-4xl">
+            Zomato-style dining cards for {city}
+          </h2>
+        </div>
+        <p className="max-w-xl text-sm leading-6 text-slate-500">
+          Curated by the new search service with cuisine, rating, budget, and delivery time all coming from the backend.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {restaurants.map((restaurant) => (
           <RestaurantCard key={restaurant.id} restaurant={restaurant} />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
 RestaurantSection.propTypes = {
+  city: PropTypes.string.isRequired,
   restaurants: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       description: PropTypes.string,
       rating: PropTypes.number,
-      deliveryTimeMinutes: PropTypes.number,
+      deliveryTime: PropTypes.number,
       costForTwo: PropTypes.number,
       priceRange: PropTypes.string,
       coverImageUrl: PropTypes.string,
       cuisines: PropTypes.arrayOf(PropTypes.string),
       pureVeg: PropTypes.bool,
+      isOpen: PropTypes.bool,
     }),
   ).isRequired,
 };

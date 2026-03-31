@@ -1,33 +1,26 @@
 import { request } from "./request";
 import { SERVICE_URLS } from "./serviceUrls";
 
-//
-// ✅ Restaurant Listing / Search
-//
-export const searchRestaurants = async (params) => {
+export const searchRestaurantsByCity = async (city) => {
   try {
     const response = await request({
       service: SERVICE_URLS.CATALOG,
-      url: "/api/catalog/restaurants",
+      url: `/restaurants/${encodeURIComponent(city)}`,
       method: "GET",
-      params, // query params
     });
 
     return response.data;
   } catch (error) {
-    console.error("searchRestaurants error:", error);
+    console.error("searchRestaurantsByCity error:", error);
     throw error?.response?.data || { message: "Failed to fetch restaurants" };
   }
 };
 
-//
-// ✅ Restaurant Details
-//
 export const getRestaurantDetails = async (restaurantId) => {
   try {
     const response = await request({
       service: SERVICE_URLS.CATALOG,
-      url: `api/catalog/restaurants/${restaurantId}`,
+      url: `/restaurants/id/${restaurantId}`,
       method: "GET",
     });
 

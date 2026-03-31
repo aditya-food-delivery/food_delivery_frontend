@@ -7,8 +7,8 @@ export const selectRestaurantsLoading = (state) => state.restaurants.loading;
 export const selectRestaurantsError = (state) => state.restaurants.error;
 
 export const selectRestaurantsPagination = (state) => ({
-  page: state.restaurants.page,
-  size: state.restaurants.size,
-  totalPages: state.restaurants.totalPages,
-  totalElements: state.restaurants.totalElements,
+  page: 0,
+  size: state.restaurants.restaurants.length,
+  totalPages: 1,
+  totalElements: state.restaurants.restaurants.length,
 });

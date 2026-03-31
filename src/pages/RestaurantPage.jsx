@@ -31,19 +31,23 @@ const RestaurantPage = () => {
   }, [dispatch, id]);
 
   if (loading) return <ShimmerLoader type="grid" />;
-  if (error)
-    return <div className="text-center py-10 text-red-500">{error}</div>;
+  if (error) {
+    return (
+      <div className="mx-auto max-w-4xl px-4 py-10 text-center text-red-500">
+        {error}
+      </div>
+    );
+  }
   if (!restaurant) return null;
 
   return (
-    <div className="bg-white min-h-screen">
-      <div className="max-w-6xl mx-auto px-4">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fffaf5_0%,#fff_25%,#fff7ed_100%)] pb-16 text-slate-900">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <RestaurantHeader restaurant={restaurant} />
         <RestaurantGallery image={restaurant.coverImageUrl} />
-
         <Tabs />
 
-        <div className="flex gap-8 mt-6">
+        <div className="mt-8 grid gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
           <CategorySidebar categories={categories} />
           <MenuContent categories={categories} />
         </div>

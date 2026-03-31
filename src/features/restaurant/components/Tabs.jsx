@@ -1,11 +1,11 @@
 const Tabs = () => {
   return (
-    <div className="flex gap-6 border-b border-gray-200 mt-6">
-      <button className="py-3 text-red-500 border-b-2 border-red-500 text-sm font-medium">
+    <div className="mt-8 flex gap-6 border-b border-orange-100">
+      <button className="border-b-2 border-orange-500 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-orange-600">
         Order Online
       </button>
-      <button className="py-3 text-gray-500 text-sm font-medium">
-        Reviews
+      <button className="py-4 text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
+        Menu Highlights
       </button>
     </div>
   );

@@ -1,46 +1,31 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { searchRestaurants, getRestaurantDetails } from "../../api/catalogApi";
+import {
+  searchRestaurantsByCity,
+  getRestaurantDetails,
+} from "../../api/catalogApi";
+import {
+  normalizeRestaurantDetails,
+  normalizeRestaurantSummary,
+} from "./restaurantAdapters";
 
-//
-// ✅ Fetch Restaurant Listing
-//
 export const fetchRestaurants = createAsyncThunk(
   "restaurants/fetchRestaurants",
-  async (params, { rejectWithValue }) => {
+  async ({ city }, { rejectWithValue }) => {
     try {
-      const data = await searchRestaurants(params);
-
-      return {
-        restaurants: data.content,
-        page: data.number,
-        size: data.size,
-        totalPages: data.totalPages,
-        totalElements: data.totalElements,
-      };
+      const data = await searchRestaurantsByCity(city);
+      return data.map(normalizeRestaurantSummary);
     } catch (error) {
       return rejectWithValue(error?.message || "Failed to fetch restaurants");
     }
   },
 );
 
-//
-// ✅ Fetch Restaurant Details
-//
 export const fetchRestaurantDetails = createAsyncThunk(
   "restaurantDetails/fetchRestaurantDetails",
   async (restaurantId, { rejectWithValue }) => {
     try {
       const data = await getRestaurantDetails(restaurantId);
-
-      // Sort categories by displayOrder (important for UI)
-      const sortedCategories = [...(data.categories || [])].sort(
-        (a, b) => a.displayOrder - b.displayOrder,
-      );
-
-      return {
-        restaurant: data,
-        categories: sortedCategories,
-      };
+      return normalizeRestaurantDetails(data);
     } catch (error) {
       return rejectWithValue(
         error?.message || "Failed to fetch restaurant details",
