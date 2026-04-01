@@ -2,6 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import AuthError from "./AuthError";
 import { useAuth } from "../../../hooks/useAuth";
+import { beginGoogleOAuth } from "../../../api/authApi";
 
 const LoginForm = ({ onSuccess, onUseOtp, onForgotPassword }) => {
   const { loginWithPassword, status, resetError } = useAuth();
@@ -91,9 +92,7 @@ const LoginForm = ({ onSuccess, onUseOtp, onForgotPassword }) => {
 
       <button
         type="button"
-        onClick={() =>
-          (window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL)
-        }
+        onClick={beginGoogleOAuth}
         className="w-full flex items-center justify-center gap-3 py-3 border border-gray-300 rounded-xl hover:bg-gray-50"
       >
         <img

@@ -5,6 +5,7 @@ import { resetAuthError } from "../authSlice";
 import AuthError from "./AuthError";
 import PropTypes from "prop-types";
 import { validatePassword } from "../../../utils/passwordValidator";
+import { beginGoogleOAuth } from "../../../api/authApi";
 const SignupForm = ({ onSwitchToLogin }) => {
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.auth);
@@ -157,9 +158,7 @@ const SignupForm = ({ onSwitchToLogin }) => {
       {/* Google */}
       <button
         type="button"
-        onClick={() =>
-          (window.location.href = import.meta.env.VITE_GOOGLE_OAUTH_URL)
-        }
+        onClick={beginGoogleOAuth}
         className="w-full flex items-center justify-center gap-3 py-3
                    border border-gray-300 rounded-xl
                    hover:bg-gray-50 transition"

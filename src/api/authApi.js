@@ -83,3 +83,15 @@ export const resetPasswordWithOtp = ({ otp, newPassword }) => {
     data: { otp, newPassword },
   });
 };
+
+export const getAuthServiceUrl = () => {
+  return import.meta.env.VITE_AUTH_SERVICE_URL || SERVICE_URLS.AUTH;
+};
+
+export const getGoogleOAuthLoginUrl = () => {
+  return `${getAuthServiceUrl()}/api/auth/oauth/login/google`;
+};
+
+export const beginGoogleOAuth = () => {
+  window.location.assign(getGoogleOAuthLoginUrl());
+};

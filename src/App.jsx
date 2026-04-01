@@ -12,6 +12,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import RestaurantPage from "./pages/RestaurantPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
+import GoogleAuthCallbackPage from "./pages/GoogleAuthCallbackPage";
 import { useAuthBootstrap } from "./hooks/useAuthBootstrap";
 import { useAuth } from "./hooks/useAuth";
 import { initializeCart } from "./features/cart/cartSlice";
@@ -46,6 +47,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/:city" element={<HomePage />} />
+        <Route path="/oauth/success" element={<GoogleAuthCallbackPage />} />
         <Route path="/restaurants/:id" element={<RestaurantPage />} />
 
         <Route path="/cart" element={<CartPage />} />
