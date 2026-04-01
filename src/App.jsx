@@ -13,6 +13,7 @@ import RestaurantPage from "./pages/RestaurantPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import GoogleAuthCallbackPage from "./pages/GoogleAuthCallbackPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import { useAuthBootstrap } from "./hooks/useAuthBootstrap";
 import { useAuth } from "./hooks/useAuth";
 import { initializeCart } from "./features/cart/cartSlice";
@@ -57,6 +58,15 @@ function App() {
           element={
             <ProtectedRoute>
               <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders/:orderId/success"
+          element={
+            <ProtectedRoute>
+              <PaymentSuccessPage />
             </ProtectedRoute>
           }
         />

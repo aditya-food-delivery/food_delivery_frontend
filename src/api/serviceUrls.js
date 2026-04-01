@@ -1,6 +1,15 @@
+const DEFAULT_GATEWAY_URL = "http://localhost:8080";
+
+export const GATEWAY_BASE_URL = (
+  import.meta.env.VITE_GATEWAY_URL || DEFAULT_GATEWAY_URL
+).replace(/\/+$/, "");
+
+const buildGatewayUrl = (prefix) => `${GATEWAY_BASE_URL}${prefix}`;
+
 export const SERVICE_URLS = {
-  AUTH: "http://localhost:8080",
-  PROFILE: "http://localhost:8081",
-  CATALOG: "http://localhost:8087",
-  ORDER: "http://localhost:8084/api",
+  AUTH: buildGatewayUrl("/auth"),
+  PROFILE: buildGatewayUrl("/profile"),
+  ORDER: buildGatewayUrl("/order/api"),
+  CATALOG: buildGatewayUrl("/catalog"),
+  SEARCH: buildGatewayUrl("/search"),
 };

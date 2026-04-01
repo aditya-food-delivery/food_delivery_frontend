@@ -85,7 +85,7 @@ export const resetPasswordWithOtp = ({ otp, newPassword }) => {
 };
 
 export const getAuthServiceUrl = () => {
-  return import.meta.env.VITE_AUTH_SERVICE_URL || SERVICE_URLS.AUTH;
+  return SERVICE_URLS.AUTH;
 };
 
 export const getGoogleOAuthLoginUrl = () => {

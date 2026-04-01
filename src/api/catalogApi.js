@@ -4,7 +4,7 @@ import { SERVICE_URLS } from "./serviceUrls";
 export const searchRestaurantsByCity = async (city) => {
   try {
     const response = await request({
-      service: SERVICE_URLS.CATALOG,
+      service: SERVICE_URLS.SEARCH,
       url: `/restaurants/${encodeURIComponent(city)}`,
       method: "GET",
     });
@@ -19,7 +19,7 @@ export const searchRestaurantsByCity = async (city) => {
 export const getRestaurantDetails = async (restaurantId) => {
   try {
     const response = await request({
-      service: SERVICE_URLS.CATALOG,
+      service: SERVICE_URLS.SEARCH,
       url: `/restaurants/id/${restaurantId}`,
       method: "GET",
     });

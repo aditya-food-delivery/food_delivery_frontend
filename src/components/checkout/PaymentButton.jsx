@@ -36,7 +36,7 @@ const PaymentButton = ({ disabled, isLoading, onPaymentInitiate, cartTotal = 0 }
       name: "Food Delivery",
       description: `Order #${order.orderId}`,
       customer_notification: 1,
-      handler: async () => {
+      handler: async (paymentResponse) => {
         try {
           dispatch(
             updateOrderPaymentStatus({
@@ -45,8 +45,12 @@ const PaymentButton = ({ disabled, isLoading, onPaymentInitiate, cartTotal = 0 }
             }),
           );
           dispatch(clearCart());
-          navigate(`/orders/${order.orderId}`, {
-            state: { paymentSuccess: true },
+          navigate(`/orders/${order.orderId}/success`, {
+            state: {
+              paymentSuccess: true,
+              paymentResponse,
+              order,
+            },
           });
         } catch (error) {
           console.error("Payment verification failed:", error);
