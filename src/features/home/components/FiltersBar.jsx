@@ -15,12 +15,15 @@ const FiltersBar = ({
   ].filter(Boolean);
 
   return (
-    <div className="sticky top-0 z-20 border-b border-orange-100/80 bg-white/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl gap-3 overflow-x-auto px-4 py-4 sm:px-6 lg:px-8">
+    <div className="sticky top-0 z-20 border-b border-orange-100/80 bg-white/75 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto px-4 py-4 sm:px-6 lg:px-8">
+        <div className="hidden rounded-full bg-slate-950 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white sm:block">
+          {city}
+        </div>
         {chips.map((chip) => (
           <div
             key={chip}
-            className="whitespace-nowrap rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm font-medium text-orange-700 shadow-sm shadow-orange-100/60"
+            className="whitespace-nowrap rounded-full border border-orange-200/80 bg-gradient-to-r from-orange-50 to-white px-4 py-2 text-sm font-medium text-orange-700 shadow-sm shadow-orange-100/70"
           >
             {chip}
           </div>

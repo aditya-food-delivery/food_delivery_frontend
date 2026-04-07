@@ -18,6 +18,11 @@ const RestaurantSection = ({ city, restaurants }) => {
     );
   }
 
+  const openRestaurants = restaurants.filter((restaurant) => restaurant.isOpen).length;
+  const featuredRestaurant = [...restaurants].sort(
+    (a, b) => (b.rating ?? 0) - (a.rating ?? 0),
+  )[0];
+
   return (
     <section className="pb-10">
       <div className="flex flex-col gap-2 pb-6 sm:flex-row sm:items-end sm:justify-between">
@@ -26,11 +31,11 @@ const RestaurantSection = ({ city, restaurants }) => {
             Delivery picks
           </p>
           <h2 className="mt-2 font-serif text-3xl text-slate-900 sm:text-4xl">
-            Zomato-style dining cards for {city}
+            Best restaurants around {city}
           </h2>
         </div>
         <p className="max-w-xl text-sm leading-6 text-slate-500">
-          Curated by the new search service with cuisine, rating, budget, and delivery time all coming from the backend.
+          {openRestaurants} are delivering right now, and {featuredRestaurant?.name || "our featured spot"} is leading the pack with the strongest rating.
         </p>
       </div>
 

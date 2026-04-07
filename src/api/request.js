@@ -1,4 +1,7 @@
-import axiosClient from "./axiosClient";
+import {
+  credentialedAxiosClient,
+  publicAxiosClient,
+} from "./axiosClient";
 
 /**
  * Generic request helper
@@ -11,13 +14,17 @@ export const request = ({
   data,
   params,
   headers,
+  withCredentials = true,
 }) => {
-  return axiosClient({
+  const client = withCredentials ? credentialedAxiosClient : publicAxiosClient;
+
+  return client({
     baseURL: service,
     url,
     method,
     data,
     params,
     headers,
+    withCredentials,
   });
 };

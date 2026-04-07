@@ -7,6 +7,7 @@ export const searchRestaurantsByCity = async (city) => {
       service: SERVICE_URLS.SEARCH,
       url: `/restaurants/${encodeURIComponent(city)}`,
       method: "GET",
+      withCredentials: false,
     });
 
     return response.data;
@@ -22,6 +23,7 @@ export const getRestaurantDetails = async (restaurantId) => {
       service: SERVICE_URLS.SEARCH,
       url: `/restaurants/id/${restaurantId}`,
       method: "GET",
+      withCredentials: false,
     });
 
     return response.data;

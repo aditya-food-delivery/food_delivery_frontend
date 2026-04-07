@@ -6,20 +6,21 @@ const isAuthRequest = (url = "") =>
   url.includes("/api/auth/jwt/refresh") ||
   url.includes("/api/auth/jwt/logout");
 
-/**
- * SINGLE axios instance
- * - Handles cookies
- * - Handles refresh token logic
- * - NO baseURL (set dynamically per request)
- */
-const axiosClient = axios.create({
+const credentialedAxiosClient = axios.create({
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
   },
 });
 
-axiosClient.interceptors.response.use(
+const publicAxiosClient = axios.create({
+  headers: {
+    "ngrok-skip-browser-warning": "true",
+  },
+});
+
+credentialedAxiosClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -36,8 +37,8 @@ axiosClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await axiosClient.post(`${SERVICE_URLS.AUTH}/api/auth/jwt/refresh`);
-        return axiosClient(originalRequest);
+        await credentialedAxiosClient.post(`${SERVICE_URLS.AUTH}/api/auth/jwt/refresh`);
+        return credentialedAxiosClient(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);
       }
@@ -47,4 +48,6 @@ axiosClient.interceptors.response.use(
   },
 );
 
-export default axiosClient;
+export { credentialedAxiosClient, publicAxiosClient };
+
+export default credentialedAxiosClient;

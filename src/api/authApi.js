@@ -28,6 +28,7 @@ export const fetchCurrentUser = () => {
   return request({
     service: SERVICE_URLS.AUTH,
     url: "/api/auth/jwt/me",
+    
     method: "GET",
   });
 };

@@ -122,6 +122,20 @@ const ClockIcon = ({ className = "h-4 w-4" }) => (
   </svg>
 );
 
+const SearchIcon = ({ className = "h-4 w-4" }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    className={className}
+    aria-hidden="true"
+  >
+    <circle cx="11" cy="11" r="6" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="m20 20-4.35-4.35" />
+  </svg>
+);
+
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -144,6 +158,8 @@ const Navbar = () => {
     .filter((address) => address.id !== selectedAddress?.id)
     .slice(0, 2);
   const currentLocation = selectedAddress?.city || profile?.city || "Bareilly";
+  const currentLocationLine =
+    formatLocationLine(selectedAddress) || "Add your saved address";
   const displayName =
     user?.name || user?.username || user?.email?.split("@")[0] || "My Account";
   const profileImage = user?.profileImageUrl || assets.profile_icon;
@@ -194,255 +210,300 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-        <div className="flex items-center justify-between gap-4">
-          <Link to="/" className="shrink-0">
-            <img
-              src={assets.logo}
-              alt="Tomato"
-              className="h-10 w-auto cursor-pointer"
-            />
-          </Link>
-        </div>
-
-        <div className="flex flex-1 items-center gap-3 lg:max-w-3xl">
-          <div
-            ref={locationRef}
-            className="relative hidden min-w-[230px] sm:block"
-          >
-            <button
-              type="button"
-              onClick={() => setIsLocationOpen((prev) => !prev)}
-              className="flex h-14 w-full items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 text-left shadow-sm transition hover:border-gray-300"
-            >
-              <span className="text-[#ef4f5f]">
-                <LocationPinIcon />
-              </span>
-              <span className="min-w-0 flex-1 truncate text-base font-medium text-gray-700">
-                {currentLocation}
-              </span>
-              <img
-                src={assets.selector_icon}
-                alt="Open locations"
-                className={`h-3 w-3 transition-transform ${isLocationOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-
-            {isLocationOpen ? (
-              <div className="absolute left-0 top-full mt-3 w-[340px] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-[0_18px_45px_rgba(15,23,42,0.12)]">
-                <button
-                  type="button"
-                  onClick={handleDetectLocation}
-                  className="flex w-full items-start gap-3 border-b border-gray-100 px-5 py-4 text-left transition hover:bg-rose-50/40"
-                >
-                  <span className="mt-1 text-[#ef4f5f]">
-                    <TargetIcon />
-                  </span>
-                  <span>
-                    <span className="block text-[15px] font-medium text-[#ef4f5f]">
-                      Detect current location
-                    </span>
-                    <span className="block text-sm text-gray-400">
-                      Using GPS
-                    </span>
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleAddAddressClick}
-                  className="flex w-full items-center gap-3 border-b border-gray-100 px-5 py-4 text-left transition hover:bg-rose-50/40"
-                >
-                  <span className="text-[#ef4f5f]">
-                    <PlusIcon />
-                  </span>
-                  <span className="text-[15px] font-medium text-[#ef4f5f]">
-                    Add address
-                  </span>
-                </button>
-
-                <div className="border-b border-gray-100 px-5 py-4">
-                  <p className="mb-3 text-[15px] font-medium text-gray-900">
-                    Saved Addresses
-                  </p>
-                  {savedAddresses.length ? (
-                    <div className="space-y-4">
-                      {savedAddresses.map((address) => (
-                        <button
-                          key={address.id || `${address.line1}-${address.city}`}
-                          type="button"
-                          className="flex w-full items-start gap-3 text-left"
-                        >
-                          <span className="mt-1 text-gray-500">
-                            {address.type?.toLowerCase() === "work" ? (
-                              <BriefcaseIcon />
-                            ) : (
-                              <HomeIcon />
-                            )}
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block text-lg font-medium leading-6 text-gray-800">
-                              {getAddressTitle(address)}
-                            </span>
-                            <span className="block truncate text-sm text-gray-500">
-                              {formatLocationLine(address)}
-                            </span>
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-gray-500">No saved addresses found.</p>
-                  )}
+    <nav className="sticky top-0 z-40 border-b border-orange-100/70 bg-[linear-gradient(180deg,rgba(255,252,248,0.94)_0%,rgba(255,247,237,0.88)_100%)] shadow-[0_16px_55px_-35px_rgba(15,23,42,0.35)] backdrop-blur-xl">
+      <div className="w-full px-3 py-4 sm:px-5 lg:px-6">
+        <div className="rounded-[2rem] border border-white/70 bg-white/70 p-3 shadow-[0_25px_80px_-45px_rgba(234,88,12,0.35)] ring-1 ring-orange-100/70 backdrop-blur-xl">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+            <div className="flex items-center justify-between gap-4 xl:shrink-0">
+              <Link to="/" className="flex min-w-0 shrink-0 items-center gap-3">
+                <div className="rounded-[1.3rem] bg-[linear-gradient(135deg,#fff1e6_0%,#ffffff_100%)] p-2 shadow-sm ring-1 ring-orange-100">
+                  <img
+                    src={assets.logo}
+                    alt="Tomato"
+                    className="h-10 w-auto cursor-pointer"
+                  />
                 </div>
-
-                <div className="px-5 py-4">
-                  <p className="mb-3 text-[15px] font-medium text-gray-900">
-                    Recent Locations
+                <div className="hidden sm:block">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-orange-500">
+                    Premium delivery
                   </p>
-                  {recentAddresses.length ? (
-                    <div className="space-y-4">
-                      {recentAddresses.map((address) => (
-                        <button
-                          key={address.id || `${address.line1}-${address.city}`}
-                          type="button"
-                          className="flex w-full items-start gap-3 text-left"
-                        >
-                          <span className="mt-1 text-gray-500">
-                            <ClockIcon />
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block text-lg font-medium leading-6 text-gray-800">
-                              {address.city || getAddressTitle(address)}
-                            </span>
-                            <span className="block truncate text-sm text-gray-500">
-                              {formatLocationLine(address)}
-                            </span>
-                          </span>
-                        </button>
-                      ))}
+                  <p className="mt-1 text-sm font-medium text-slate-500">
+                    Elevated meals, faster checkout
+                  </p>
+                </div>
+              </Link>
+
+              <Link
+                to="/cart"
+                className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-orange-100 bg-[linear-gradient(135deg,#fff7ed_0%,#ffffff_100%)] text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-300 hover:text-[#ef4f5f] xl:hidden"
+                aria-label="Open cart"
+              >
+                <img src={assets.basket_icon} alt="Cart" className="h-5 w-5" />
+                {cartItemCount > 0 ? (
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#ef4f5f] px-1 text-[10px] font-semibold text-white">
+                    {cartItemCount}
+                  </span>
+                ) : null}
+              </Link>
+            </div>
+
+            <div className="flex min-w-0 flex-1 flex-col gap-3 xl:flex-row xl:items-center">
+              <div
+                ref={locationRef}
+                className="relative min-w-0 xl:w-[310px] xl:shrink-0"
+              >
+                <button
+                  type="button"
+                  onClick={() => setIsLocationOpen((prev) => !prev)}
+                  className="flex min-h-[64px] w-full items-center gap-3 rounded-[1.5rem] border border-orange-100 bg-[linear-gradient(135deg,#fff8f2_0%,#ffffff_100%)] px-4 py-3 text-left shadow-sm transition hover:border-orange-300 hover:shadow-md"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ef4f5f]/10 text-[#ef4f5f]">
+                    <LocationPinIcon className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
+                      Deliver to
+                    </span>
+                    <span className="mt-1 block truncate text-base font-semibold text-slate-800">
+                      {currentLocation}
+                    </span>
+                    <span className="block truncate text-sm text-slate-500">
+                      {currentLocationLine}
+                    </span>
+                  </span>
+                  <img
+                    src={assets.selector_icon}
+                    alt="Open locations"
+                    className={`h-3 w-3 transition-transform ${isLocationOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {isLocationOpen ? (
+                  <div className="absolute left-0 top-full mt-3 w-full overflow-hidden rounded-[1.75rem] border border-orange-100 bg-white/95 shadow-[0_28px_70px_-35px_rgba(15,23,42,0.35)] ring-1 ring-orange-100/60 backdrop-blur-xl xl:min-w-[320px]">
+                    <div className="border-b border-orange-50 px-5 py-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-orange-500">
+                        Location hub
+                      </p>
+                      <p className="mt-2 text-sm text-slate-500">
+                        Choose a saved address or add a new delivery point.
+                      </p>
                     </div>
-                  ) : (
-                    <p className="text-sm text-gray-500">
-                      No recent locations yet.
-                    </p>
-                  )}
+
+                    <button
+                      type="button"
+                      onClick={handleDetectLocation}
+                      className="flex w-full items-start gap-3 border-b border-orange-50 px-5 py-4 text-left transition hover:bg-rose-50/40"
+                    >
+                      <span className="mt-1 flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-50 text-[#ef4f5f]">
+                        <TargetIcon />
+                      </span>
+                      <span>
+                        <span className="block text-[15px] font-medium text-[#ef4f5f]">
+                          Detect current location
+                        </span>
+                        <span className="block text-sm text-slate-400">Using GPS</span>
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleAddAddressClick}
+                      className="flex w-full items-center gap-3 border-b border-orange-50 px-5 py-4 text-left transition hover:bg-rose-50/40"
+                    >
+                      <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-50 text-[#ef4f5f]">
+                        <PlusIcon />
+                      </span>
+                      <span className="text-[15px] font-medium text-[#ef4f5f]">
+                        Add address
+                      </span>
+                    </button>
+
+                    <div className="border-b border-orange-50 px-5 py-4">
+                      <p className="mb-3 text-[15px] font-medium text-slate-900">
+                        Saved Addresses
+                      </p>
+                      {savedAddresses.length ? (
+                        <div className="space-y-4">
+                          {savedAddresses.map((address) => (
+                            <button
+                              key={address.id || `${address.line1}-${address.city}`}
+                              type="button"
+                              className="flex w-full items-start gap-3 rounded-2xl px-2 py-2 text-left transition hover:bg-slate-50"
+                            >
+                              <span className="mt-1 flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-600">
+                                {address.type?.toLowerCase() === "work" ? (
+                                  <BriefcaseIcon />
+                                ) : (
+                                  <HomeIcon />
+                                )}
+                              </span>
+                              <span className="min-w-0">
+                                <span className="block text-base font-medium leading-6 text-slate-800">
+                                  {getAddressTitle(address)}
+                                </span>
+                                <span className="block truncate text-sm text-slate-500">
+                                  {formatLocationLine(address)}
+                                </span>
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-slate-500">No saved addresses found.</p>
+                      )}
+                    </div>
+
+                    <div className="px-5 py-4">
+                      <p className="mb-3 text-[15px] font-medium text-slate-900">
+                        Recent Locations
+                      </p>
+                      {recentAddresses.length ? (
+                        <div className="space-y-4">
+                          {recentAddresses.map((address) => (
+                            <button
+                              key={address.id || `${address.line1}-${address.city}`}
+                              type="button"
+                              className="flex w-full items-start gap-3 rounded-2xl px-2 py-2 text-left transition hover:bg-slate-50"
+                            >
+                              <span className="mt-1 flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-600">
+                                <ClockIcon />
+                              </span>
+                              <span className="min-w-0">
+                                <span className="block text-base font-medium leading-6 text-slate-800">
+                                  {address.city || getAddressTitle(address)}
+                                </span>
+                                <span className="block truncate text-sm text-slate-500">
+                                  {formatLocationLine(address)}
+                                </span>
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-slate-500">No recent locations yet.</p>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="flex min-h-[64px] min-w-0 flex-1 items-center gap-3 rounded-[1.5rem] border border-orange-100 bg-[linear-gradient(135deg,#ffffff_0%,#fff7ed_100%)] px-4 py-3 shadow-sm transition focus-within:border-[#ef4f5f] focus-within:shadow-md">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-white">
+                  <SearchIcon className="h-4 w-4" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
+                    Search
+                  </p>
+                  <input
+                    type="text"
+                    placeholder="Restaurants, cuisines, dishes"
+                    className="mt-1 w-full bg-transparent text-sm font-medium text-slate-700 outline-none placeholder:text-slate-400"
+                  />
                 </div>
               </div>
-            ) : null}
-          </div>
 
-          <div className="flex h-14 flex-1 items-center rounded-xl border border-gray-200 bg-white px-4 shadow-sm transition focus-within:border-[#ef4f5f]">
-            <img
-              src={assets.search_icon}
-              alt="Search"
-              className="mr-3 h-4 w-4 opacity-60"
-            />
-            <input
-              type="text"
-              placeholder="Search for restaurants, cuisines, or dishes"
-              className="w-full bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400"
-            />
-          </div>
-
-          <Link
-            to="/cart"
-            className="relative flex h-12 min-w-12 items-center justify-center rounded-2xl border border-gray-200 bg-white text-gray-700 transition hover:border-[#ef4f5f] hover:text-[#ef4f5f]"
-            aria-label="Open cart"
-          >
-            <img src={assets.basket_icon} alt="Cart" className="h-5 w-5" />
-            {cartItemCount > 0 ? (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#ef4f5f] px-1 text-[10px] font-semibold text-white">
-                {cartItemCount}
-              </span>
-            ) : null}
-          </Link>
-        </div>
-
-        <div className="flex items-center justify-end gap-3">
-          {!isAuthenticated ? (
-            <>
-              <button
-                type="button"
-                onClick={() => openAuthModal("login")}
-                className="rounded-full px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+              <Link
+                to="/cart"
+                className="relative hidden h-[64px] w-[64px] shrink-0 items-center justify-center rounded-[1.5rem] border border-orange-100 bg-[linear-gradient(135deg,#fff7ed_0%,#ffffff_100%)] text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-300 hover:text-[#ef4f5f] xl:flex"
+                aria-label="Open cart"
               >
-                Log in
-              </button>
-              <button
-                type="button"
-                onClick={() => openAuthModal("signup")}
-                className="rounded-full bg-[#ef4f5f] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#d93d4e]"
-              >
-                Sign up
-              </button>
-            </>
-          ) : (
-            <div ref={menuRef} className="relative">
-              <button
-                type="button"
-                onClick={() => setIsMenuOpen((prev) => !prev)}
-                className="flex items-center gap-3 rounded-full border border-gray-200 bg-white px-2 py-2 pr-4 transition hover:border-gray-300 hover:bg-gray-50"
-              >
-                <img
-                  src={profileImage}
-                  alt={displayName}
-                  className="h-10 w-10 rounded-full border border-gray-200 object-cover"
-                />
-                <div className="hidden text-left sm:block">
-                  <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
-                    Welcome
-                  </p>
-                  <p className="max-w-[140px] truncate text-sm font-semibold text-gray-800">
-                    {displayName}
-                  </p>
-                </div>
-                <img
-                  src={assets.selector_icon}
-                  alt="Open menu"
-                  className={`h-3 w-3 transition-transform ${isMenuOpen ? "rotate-180" : ""}`}
-                />
-              </button>
+                <img src={assets.basket_icon} alt="Cart" className="h-5 w-5" />
+                {cartItemCount > 0 ? (
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#ef4f5f] px-1 text-[10px] font-semibold text-white">
+                    {cartItemCount}
+                  </span>
+                ) : null}
+              </Link>
+            </div>
 
-              {isMenuOpen ? (
-                <div className="absolute right-0 top-full mt-3 w-56 rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
-                  <div className="border-b border-gray-100 px-3 py-3">
-                    <p className="truncate text-sm font-semibold text-gray-900">
-                      {displayName}
-                    </p>
-                    <p className="truncate text-xs text-gray-500">
-                      {user?.email || "Signed in user"}
-                    </p>
-                  </div>
-
-                  <Link
-                    to="/profile"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="mt-2 block rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-                  >
-                    My Profile
-                  </Link>
-
-                  <Link
-                    to="/cart"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block rounded-xl px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-                  >
-                    Cart ({cartItemCount})
-                  </Link>
-
+            <div className="flex shrink-0 flex-wrap items-center justify-end gap-3 xl:flex-nowrap">
+              {!isAuthenticated ? (
+                <>
                   <button
                     type="button"
-                    onClick={handleLogout}
-                    className="block w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                    onClick={() => openAuthModal("login")}
+                    className="shrink-0 rounded-full px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
                   >
-                    Logout
+                    Log in
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => openAuthModal("signup")}
+                    className="shrink-0 rounded-full bg-[linear-gradient(135deg,#ef4f5f_0%,#f97316_100%)] px-5 py-2.5 text-sm font-medium text-white shadow-[0_18px_35px_-18px_rgba(239,79,95,0.9)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_40px_-18px_rgba(239,79,95,0.9)]"
+                  >
+                    Sign up
+                  </button>
+                </>
+              ) : (
+                <div ref={menuRef} className="relative shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setIsMenuOpen((prev) => !prev)}
+                    className="flex items-center gap-3 rounded-full border border-orange-100 bg-[linear-gradient(135deg,#ffffff_0%,#fff7ed_100%)] px-2 py-2 pr-4 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-300"
+                  >
+                    <img
+                      src={profileImage}
+                      alt={displayName}
+                      className="h-11 w-11 shrink-0 rounded-full border border-orange-100 object-cover"
+                    />
+                    <div className="hidden text-left sm:block">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-orange-500">
+                        Welcome back
+                      </p>
+                      <p className="max-w-[160px] truncate text-sm font-semibold text-slate-800">
+                        {displayName}
+                      </p>
+                    </div>
+                    <img
+                      src={assets.selector_icon}
+                      alt="Open menu"
+                      className={`h-3 w-3 transition-transform ${isMenuOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+
+                  {isMenuOpen ? (
+                    <div className="absolute right-0 top-full mt-3 w-64 rounded-[1.75rem] border border-orange-100 bg-white/95 p-2 shadow-[0_28px_70px_-35px_rgba(15,23,42,0.35)] ring-1 ring-orange-100/60 backdrop-blur-xl">
+                      <div className="rounded-[1.25rem] bg-[linear-gradient(135deg,#fff7ed_0%,#ffffff_100%)] px-4 py-4">
+                        <p className="truncate text-sm font-semibold text-slate-900">
+                          {displayName}
+                        </p>
+                        <p className="mt-1 truncate text-xs text-slate-500">
+                          {user?.email || "Signed in user"}
+                        </p>
+                      </div>
+
+                      <div className="mt-2 space-y-1">
+                        <Link
+                          to="/profile"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                        >
+                          My Profile
+                        </Link>
+
+                        <Link
+                          to="/cart"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                        >
+                          Cart ({cartItemCount})
+                        </Link>
+
+                        <button
+                          type="button"
+                          onClick={handleLogout}
+                          className="block w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
-              ) : null}
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </nav>
