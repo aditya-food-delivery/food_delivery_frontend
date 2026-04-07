@@ -1,5 +1,8 @@
 import PropTypes from "prop-types";
 import RestaurantCard from "./RestaurantCard";
+import { food_list } from "../../../assets/assets";
+
+const fallbackRestaurantImages = food_list.map((item) => item.image);
 
 const RestaurantSection = ({ city, restaurants }) => {
   if (!restaurants.length) {
@@ -40,8 +43,16 @@ const RestaurantSection = ({ city, restaurants }) => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        {restaurants.map((restaurant) => (
-          <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+        {restaurants.map((restaurant, index) => (
+          <RestaurantCard
+            key={restaurant.id}
+            restaurant={{
+              ...restaurant,
+              coverImageUrl:
+                restaurant.coverImageUrl ||
+                fallbackRestaurantImages[index % fallbackRestaurantImages.length],
+            }}
+          />
         ))}
       </div>
     </section>

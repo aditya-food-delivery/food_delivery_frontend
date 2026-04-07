@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { assets } from "../assets/assets";
 import { useAuth } from "../hooks/useAuth";
@@ -136,9 +136,45 @@ const SearchIcon = ({ className = "h-4 w-4" }) => (
   </svg>
 );
 
+const QUICK_CITIES = [
+  "Delhi",
+  "Mumbai",
+  "Bengaluru",
+  "Hyderabad",
+  "Chennai",
+  "Pune",
+  "Bareilly",
+];
+
+const RESERVED_TOP_LEVEL_ROUTES = new Set([
+  "restaurants",
+  "cart",
+  "checkout",
+  "profile",
+  "oauth",
+  "orders",
+]);
+
+const normalizeCityName = (value) => {
+  if (typeof value !== "string") return "";
+  return value.trim().replace(/\s+/g, " ");
+};
+
+const getCityFromPath = (pathname) => {
+  const [segment] = pathname.split("/").filter(Boolean);
+  if (!segment || RESERVED_TOP_LEVEL_ROUTES.has(segment)) return "";
+
+  try {
+    return normalizeCityName(decodeURIComponent(segment));
+  } catch {
+    return normalizeCityName(segment);
+  }
+};
+
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { auth, openAuthModal, logout } = useAuth();
   const cartItemCount = useSelector(selectCartItemCount);
   const profile = useSelector(selectProfile);
@@ -157,9 +193,26 @@ const Navbar = () => {
   const recentAddresses = addressList
     .filter((address) => address.id !== selectedAddress?.id)
     .slice(0, 2);
-  const currentLocation = selectedAddress?.city || profile?.city || "Bareilly";
+  const routeCity = getCityFromPath(location.pathname);
+  const currentLocation =
+    routeCity || selectedAddress?.city || profile?.city || "Delhi";
   const currentLocationLine =
-    formatLocationLine(selectedAddress) || "Add your saved address";
+    routeCity && routeCity !== selectedAddress?.city
+      ? `Showing restaurants in ${routeCity}`
+      : formatLocationLine(selectedAddress) || "Add your saved address";
+  const cityOptions = Array.from(
+    new Set(
+      [
+        routeCity,
+        selectedAddress?.city,
+        profile?.city,
+        ...addressList.map((address) => address.city),
+        ...QUICK_CITIES,
+      ]
+        .map(normalizeCityName)
+        .filter(Boolean),
+    ),
+  );
   const displayName =
     user?.name || user?.username || user?.email?.split("@")[0] || "My Account";
   const profileImage = user?.profileImageUrl || assets.profile_icon;
@@ -202,6 +255,14 @@ const Navbar = () => {
 
   const handleDetectLocation = () => {
     setIsLocationOpen(false);
+  };
+
+  const handleCitySelect = (city) => {
+    const nextCity = normalizeCityName(city);
+    if (!nextCity) return;
+
+    setIsLocationOpen(false);
+    navigate(`/${encodeURIComponent(nextCity)}`);
   };
 
   const handleLogout = async () => {
@@ -290,8 +351,30 @@ const Navbar = () => {
                         Location hub
                       </p>
                       <p className="mt-2 text-sm text-slate-500">
-                        Choose a saved address or add a new delivery point.
+                        Choose a city to browse restaurants, or manage your delivery addresses.
                       </p>
+                    </div>
+
+                    <div className="border-b border-orange-50 px-5 py-4">
+                      <p className="mb-3 text-[15px] font-medium text-slate-900">
+                        Browse by city
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {cityOptions.map((city) => (
+                          <button
+                            key={city}
+                            type="button"
+                            onClick={() => handleCitySelect(city)}
+                            className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                              city.toLowerCase() === currentLocation.toLowerCase()
+                                ? "bg-[#ef4f5f] text-white shadow-[0_16px_35px_-18px_rgba(239,79,95,0.9)]"
+                                : "border border-orange-200 bg-orange-50/70 text-slate-700 hover:border-orange-300 hover:bg-orange-100"
+                            }`}
+                          >
+                            {city}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     <button
@@ -333,6 +416,7 @@ const Navbar = () => {
                             <button
                               key={address.id || `${address.line1}-${address.city}`}
                               type="button"
+                              onClick={() => handleCitySelect(address.city)}
                               className="flex w-full items-start gap-3 rounded-2xl px-2 py-2 text-left transition hover:bg-slate-50"
                             >
                               <span className="mt-1 flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-600">
@@ -368,6 +452,7 @@ const Navbar = () => {
                             <button
                               key={address.id || `${address.line1}-${address.city}`}
                               type="button"
+                              onClick={() => handleCitySelect(address.city)}
                               className="flex w-full items-start gap-3 rounded-2xl px-2 py-2 text-left transition hover:bg-slate-50"
                             >
                               <span className="mt-1 flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-600">
