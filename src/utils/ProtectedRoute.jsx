@@ -1,33 +1,30 @@
 import { useEffect, useRef } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import FullPageSpinner from "./FullPageSpinner";
 
 const ProtectedRoute = ({ children }) => {
+  const location = useLocation();
   const { status, auth, openAuthModal } = useAuth();
   const loading = status === "loading";
   const isAuthenticated = auth.isAuthenticated;
-  console.log("authentication in profile", isAuthenticated);
   const modalOpenedRef = useRef(false);
 
   useEffect(() => {
-    // Open auth modal ONCE if user is not authenticated
     if (!loading && !isAuthenticated && !modalOpenedRef.current) {
       openAuthModal("login");
       modalOpenedRef.current = true;
     }
   }, [loading, isAuthenticated, openAuthModal]);
 
-  // While checking auth → block everything
   if (loading) {
     return <FullPageSpinner />;
   }
 
-  // Not authenticated → block route (modal is already open)
   if (!isAuthenticated) {
-    return null;
+    return <Navigate to="/" replace state={{ from: location }} />;
   }
 
-  // Authenticated → render protected content
   return children;
 };
 

@@ -204,19 +204,24 @@ const Navbar = () => {
     setIsLocationOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setIsMenuOpen(false);
-    logout();
+
+    try {
+      await logout();
+    } finally {
+      navigate("/", { replace: true });
+    }
   };
 
   return (
     <nav className="sticky top-0 z-40 border-b border-orange-100/70 bg-[linear-gradient(180deg,rgba(255,252,248,0.94)_0%,rgba(255,247,237,0.88)_100%)] shadow-[0_16px_55px_-35px_rgba(15,23,42,0.35)] backdrop-blur-xl">
       <div className="w-full px-3 py-4 sm:px-5 lg:px-6">
-        <div className="rounded-[2rem] border border-white/70 bg-white/70 p-3 shadow-[0_25px_80px_-45px_rgba(234,88,12,0.35)] ring-1 ring-orange-100/70 backdrop-blur-xl">
+        <div className="rounded-[2rem] bg-white/72 p-3 shadow-[0_25px_80px_-45px_rgba(15,23,42,0.24)] backdrop-blur-xl">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center justify-between gap-4 xl:shrink-0">
               <Link to="/" className="flex min-w-0 shrink-0 items-center gap-3">
-                <div className="rounded-[1.3rem] bg-[linear-gradient(135deg,#fff1e6_0%,#ffffff_100%)] p-2 shadow-sm ring-1 ring-orange-100">
+                <div className="rounded-[1.3rem] bg-white/85 p-2">
                   <img
                     src={assets.logo}
                     alt="Tomato"
@@ -235,7 +240,7 @@ const Navbar = () => {
 
               <Link
                 to="/cart"
-                className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-orange-100 bg-[linear-gradient(135deg,#fff7ed_0%,#ffffff_100%)] text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-300 hover:text-[#ef4f5f] xl:hidden"
+                className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/82 text-slate-700 transition hover:bg-white hover:text-[#ef4f5f] xl:hidden"
                 aria-label="Open cart"
               >
                 <img src={assets.basket_icon} alt="Cart" className="h-5 w-5" />
@@ -255,9 +260,9 @@ const Navbar = () => {
                 <button
                   type="button"
                   onClick={() => setIsLocationOpen((prev) => !prev)}
-                  className="flex min-h-[64px] w-full items-center gap-3 rounded-[1.5rem] border border-orange-100 bg-[linear-gradient(135deg,#fff8f2_0%,#ffffff_100%)] px-4 py-3 text-left shadow-sm transition hover:border-orange-300 hover:shadow-md"
+                  className="flex min-h-[64px] w-full items-center gap-3 rounded-[1.5rem] bg-white/82 px-4 py-3 text-left transition hover:bg-white"
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ef4f5f]/10 text-[#ef4f5f]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#ef4f5f]/8 text-[#ef4f5f]">
                     <LocationPinIcon className="h-5 w-5" />
                   </span>
                   <span className="min-w-0 flex-1">
@@ -279,7 +284,7 @@ const Navbar = () => {
                 </button>
 
                 {isLocationOpen ? (
-                  <div className="absolute left-0 top-full mt-3 w-full overflow-hidden rounded-[1.75rem] border border-orange-100 bg-white/95 shadow-[0_28px_70px_-35px_rgba(15,23,42,0.35)] ring-1 ring-orange-100/60 backdrop-blur-xl xl:min-w-[320px]">
+                  <div className="absolute left-0 top-full mt-3 w-full overflow-hidden rounded-[1.75rem] bg-white/95 shadow-[0_28px_70px_-35px_rgba(15,23,42,0.24)] backdrop-blur-xl xl:min-w-[320px]">
                     <div className="border-b border-orange-50 px-5 py-4">
                       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-orange-500">
                         Location hub
@@ -387,8 +392,8 @@ const Navbar = () => {
                 ) : null}
               </div>
 
-              <div className="flex min-h-[64px] min-w-0 flex-1 items-center gap-3 rounded-[1.5rem] border border-orange-100 bg-[linear-gradient(135deg,#ffffff_0%,#fff7ed_100%)] px-4 py-3 shadow-sm transition focus-within:border-[#ef4f5f] focus-within:shadow-md">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-white">
+              <div className="flex min-h-[64px] min-w-0 flex-1 items-center gap-3 rounded-[1.5rem] bg-white/82 px-4 py-3 transition focus-within:bg-white">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-600">
                   <SearchIcon className="h-4 w-4" />
                 </span>
                 <div className="min-w-0 flex-1">
@@ -405,7 +410,7 @@ const Navbar = () => {
 
               <Link
                 to="/cart"
-                className="relative hidden h-[64px] w-[64px] shrink-0 items-center justify-center rounded-[1.5rem] border border-orange-100 bg-[linear-gradient(135deg,#fff7ed_0%,#ffffff_100%)] text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-300 hover:text-[#ef4f5f] xl:flex"
+                className="relative hidden h-[64px] w-[64px] shrink-0 items-center justify-center rounded-[1.5rem] bg-white/82 text-slate-700 transition hover:bg-white hover:text-[#ef4f5f] xl:flex"
                 aria-label="Open cart"
               >
                 <img src={assets.basket_icon} alt="Cart" className="h-5 w-5" />
@@ -423,7 +428,7 @@ const Navbar = () => {
                   <button
                     type="button"
                     onClick={() => openAuthModal("login")}
-                    className="shrink-0 rounded-full px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                    className="shrink-0 rounded-full px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-white"
                   >
                     Log in
                   </button>
@@ -440,12 +445,12 @@ const Navbar = () => {
                   <button
                     type="button"
                     onClick={() => setIsMenuOpen((prev) => !prev)}
-                    className="flex items-center gap-3 rounded-full border border-orange-100 bg-[linear-gradient(135deg,#ffffff_0%,#fff7ed_100%)] px-2 py-2 pr-4 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-300"
+                    className="flex items-center gap-3 rounded-full bg-white/82 px-2 py-2 pr-4 transition hover:bg-white"
                   >
                     <img
                       src={profileImage}
                       alt={displayName}
-                      className="h-11 w-11 shrink-0 rounded-full border border-orange-100 object-cover"
+                      className="h-11 w-11 shrink-0 rounded-full object-cover"
                     />
                     <div className="hidden text-left sm:block">
                       <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-orange-500">
@@ -463,8 +468,8 @@ const Navbar = () => {
                   </button>
 
                   {isMenuOpen ? (
-                    <div className="absolute right-0 top-full mt-3 w-64 rounded-[1.75rem] border border-orange-100 bg-white/95 p-2 shadow-[0_28px_70px_-35px_rgba(15,23,42,0.35)] ring-1 ring-orange-100/60 backdrop-blur-xl">
-                      <div className="rounded-[1.25rem] bg-[linear-gradient(135deg,#fff7ed_0%,#ffffff_100%)] px-4 py-4">
+                    <div className="absolute right-0 top-full mt-3 w-64 rounded-[1.75rem] bg-white/95 p-2 shadow-[0_28px_70px_-35px_rgba(15,23,42,0.24)] backdrop-blur-xl">
+                      <div className="rounded-[1.25rem] bg-orange-50/60 px-4 py-4">
                         <p className="truncate text-sm font-semibold text-slate-900">
                           {displayName}
                         </p>

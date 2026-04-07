@@ -144,6 +144,9 @@ const PaymentSuccessPage = () => {
                 <span className="rounded-full bg-white px-4 py-2 font-medium text-slate-700 shadow-sm">
                   Paid at {formatTimestamp(placedAt)}
                 </span>
+                <span className="rounded-full bg-white px-4 py-2 font-medium text-slate-700 shadow-sm">
+                  {orderItems.length} item{orderItems.length === 1 ? "" : "s"}
+                </span>
               </div>
             </div>
           </div>
@@ -206,6 +209,14 @@ const PaymentSuccessPage = () => {
                     {formatCurrency(amount)}
                   </span>
                 </div>
+                {orderDetails.restaurantId ? (
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-slate-500">Restaurant</span>
+                    <span className="font-semibold text-slate-900">
+                      {orderDetails.restaurantId}
+                    </span>
+                  </div>
+                ) : null}
                 <div className="flex items-center justify-between gap-4">
                   <span className="text-slate-500">Payment ID</span>
                   <span className="max-w-[180px] truncate font-mono text-xs text-slate-900">

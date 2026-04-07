@@ -38,20 +38,28 @@ const PaymentButton = ({ disabled, isLoading, onPaymentInitiate, cartTotal = 0 }
       customer_notification: 1,
       handler: async (paymentResponse) => {
         try {
+          const successfulOrder = {
+            ...order,
+            paymentId: paymentResponse.razorpay_payment_id,
+            paymentStatus: "CONFIRMED",
+            status: order.status || "CONFIRMED",
+          };
+
           dispatch(
             updateOrderPaymentStatus({
               orderId: order.orderId,
               paymentStatus: "CONFIRMED",
             }),
           );
-          dispatch(clearCart());
           navigate(`/orders/${order.orderId}/success`, {
+            replace: true,
             state: {
               paymentSuccess: true,
               paymentResponse,
-              order,
+              order: successfulOrder,
             },
           });
+          dispatch(clearCart());
         } catch (error) {
           console.error("Payment verification failed:", error);
         }
@@ -114,7 +122,7 @@ const PaymentButton = ({ disabled, isLoading, onPaymentInitiate, cartTotal = 0 }
         </span>
       ) : (
         <span className="flex items-center justify-center gap-2">
-          <span>{isReadyToPay ? "Pay Now" : "Pay"}</span>
+          <span>{isReadyToPay ? "Pay now" : "Pay"}</span>
           <span aria-hidden="true">|</span>
           <span>Rs. {displayAmount?.toFixed(2) || "0.00"}</span>
         </span>

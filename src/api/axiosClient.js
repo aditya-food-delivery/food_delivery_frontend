@@ -6,6 +6,8 @@ const isAuthRequest = (url = "") =>
   url.includes("/api/auth/jwt/refresh") ||
   url.includes("/api/auth/jwt/logout");
 
+let refreshRequest = null;
+
 const credentialedAxiosClient = axios.create({
   withCredentials: true,
   headers: {
@@ -37,7 +39,15 @@ credentialedAxiosClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await credentialedAxiosClient.post(`${SERVICE_URLS.AUTH}/api/auth/jwt/refresh`);
+        if (!refreshRequest) {
+          refreshRequest = credentialedAxiosClient
+            .post(`${SERVICE_URLS.AUTH}/api/auth/jwt/refresh`)
+            .finally(() => {
+              refreshRequest = null;
+            });
+        }
+
+        await refreshRequest;
         return credentialedAxiosClient(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);
